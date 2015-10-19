@@ -5,20 +5,21 @@ from bs4 import BeautifulSoup
 import json
 
 
-def findVideos():
+def find_video_objects():
     base = 'http://www.efn.se/'
     api = base + 'api/playerconf?post_id='
 
-    for num in range(350, 5000):
+    for num in range(887, 890):
         api_request = api + str(num)
         response = requests.get(api_request)
 
         try:
-            jsonObject = response.json()
+            json_object = response.json()
 
-            video_file = jsonObject['streams']['ipad']
-            slug = jsonObject['slug']
-            image = jsonObject['image']
+            streams = json_object['streams']
+            slug = json_object['slug']
+            image = json_object['image']
+            caption_url = json_object['caption_url']
 
             html = requests.get(base + slug)
             soup = BeautifulSoup(html.content, 'html.parser')
@@ -36,18 +37,13 @@ def findVideos():
                 if i.has_attr('datetime'):
                     datetime = i['datetime']
 
-            data = {}
-            data['apiurl'] = api_request
-            data['video'] = video_file
-            data['image'] = image
-            data['slug'] = slug
-            data['video_name'] = video_name
-            data['datetime'] = datetime
-            data['description'] = description
-            jsondata = json.dumps(data)
-            print jsondata
+            data = {'caption_url': caption_url, 'api_url': api_request, 'streams': streams, 'image': image,
+                    'slug': slug, 'video_name': video_name, 'datetime': datetime, 'description': description}
+            json_object = json.dumps(data)
+
+            print json_object
             f = open('export.log', 'a')
-            f.write(jsondata + '\n')
+            f.write(json_object + '\n')
             f.close()
 
         except KeyError:
@@ -57,4 +53,4 @@ def findVideos():
         except AttributeError:
             print "Attribute error on: " + api_request
 
-findVideos()
+find_video_objects()
