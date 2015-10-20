@@ -9,7 +9,7 @@ def find_video_objects():
     base = 'http://www.efn.se/'
     api = base + 'api/playerconf?post_id='
 
-    for num in range(887, 890):
+    for num in range(1000, 2000):
         api_request = api + str(num)
         response = requests.get(api_request)
 
