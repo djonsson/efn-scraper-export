@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import json
 
 
+
 def find_video_objects():
     base = 'http://www.efn.se/'
     api = base + 'api/playerconf?post_id='
